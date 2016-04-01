@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/tool_bar">
+
+    </include>
+
+
+    <EditText
+        android:id="@+id/new_calendar_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tool_bar"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:hint="New calendar name"
+        android:maxLength="15"
+        android:singleLine="true"
+        android:textColor="@color/colorTextSecondary"
+        android:textColorHint="@color/colorTextSecondaryBright"
+        android:textSize="30sp"/>
+
+    <EditText
+        android:id="@+id/new_calendar_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/new_calendar_name"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:gravity="center_horizontal"
+        android:hint="Description (optional)"
+        android:maxLength="25"
+        android:singleLine="true"
+        android:textColor="@color/colorTextSecondary"
+        android:textColorHint="@color/colorTextSecondaryBright"
+        android:textSize="20sp"/>
+
+    <RelativeLayout
+
+        android:id="@+id/linear_layout_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/new_calendar_description"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/circle"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="0dp"
+            android:layout_marginStart="0dp"
+            android:background="@drawable/shape"/>
+
+        <EditText
+            android:id="@+id/color_description_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@+id/circle"
+            android:layout_toLeftOf="@+id/add_color"
+            android:layout_toRightOf="@+id/circle"
+            android:layout_toStartOf="@+id/add_color"
+            android:background="@android:color/transparent"
+            android:hint="\u003Cempty\u003E"
+            android:maxLines="1"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/add_color"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:width="20dp"
+            android:height="20dp"
+            android:background="@android:drawable/ic_input_add"
+            android:padding="10dp"/>
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/line1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/linear_layout_card_view"
+        android:background="#ff000000"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/colors_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_above="@+id/line2"
+        android:layout_below="@+id/line1"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:isScrollContainer="false">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <ImageView
+        android:id="@+id/line2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/buttons_layout"
+        android:background="#d3d3d3"/>
+
+    <LinearLayout
+        android:id="@+id/buttons_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="0dp"
+        android:background="@color/colorPrimary"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/remove_calendar_button"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="12dp"
+            android:text="REMOVE"
+            android:textColor="@color/colorTextSecondary"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/new_calendar_add_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="12dp"
+            android:text="ADD"
+            android:textColor="@color/colorTextSecondary"/>
+
+        <TextView
+            android:id="@+id/new_calendar_cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="12dp"
+            android:text="CANCEL"
+            android:textColor="@color/colorTextSecondary"/>
+    </LinearLayout>
+</RelativeLayout>

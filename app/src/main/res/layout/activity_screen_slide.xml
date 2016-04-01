@@ -1,0 +1,123 @@
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/drawer_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/tool_bar"
+            layout="@layout/tool_bar"
+            ></include>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/bottom_navigation"
+            android:layout_below="@+id/tool_bar"/>
+
+        <LinearLayout
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorPrimary"
+            android:paddingBottom="4dp"
+            android:paddingTop="6dp">
+
+            <RelativeLayout
+
+                android:id="@+id/unlock_btn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/unlock_image"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/locked"/>
+
+
+                <TextView
+                    android:id="@+id/unlock_text"
+                    android:textColor="@color/colorTextSecondary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/unlock_image"
+                    android:layout_centerHorizontal="true"
+                    android:text="Locked"
+                    android:textSize="14sp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/new_calendar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/add_image"
+
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@android:drawable/ic_menu_add"/>
+
+                <TextView
+                    android:id="@+id/add_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/add_image"
+                    android:layout_centerHorizontal="true"
+                    android:text="Add new"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textSize="14sp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/edit_calendar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/edit_image"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+
+                    android:layout_centerHorizontal="true"
+                    android:background="@android:drawable/ic_menu_edit"
+                    android:gravity="center_vertical"/>
+
+                <TextView
+                    android:id="@+id/edit_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/edit_image"
+                    android:layout_centerHorizontal="true"
+                    android:text="Edit"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textSize="14sp"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/left_drawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom|start"
+        android:background="#ffffff"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/black"
+        android:dividerHeight="2dp"/>
+
+
+</android.support.v4.widget.DrawerLayout>
