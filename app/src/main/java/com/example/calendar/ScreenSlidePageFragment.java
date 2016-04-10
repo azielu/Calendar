@@ -28,22 +28,19 @@ public class ScreenSlidePageFragment extends Fragment {
 
     final Calendar mCalendar = Calendar.getInstance();
     final Calendar mActualCalendar = Calendar.getInstance();
-    private CalendarLoader calendarLoader;
-    private List<Day> dayList;
-
+    public boolean isLocked = true;
     ViewGroup rootView;
-
     GridLayout gridLayout;
-
-
-    private int index;
     String calendarName = "";
     String calendarDescriptions = "";
     List<Integer> colorsArray = new ArrayList<>();
-
     TextView calendarNameTextView;
     TextView calendarDescriptionTextView;
-    public boolean isLocked = true;
+    private CalendarLoader calendarLoader;
+    private List<Day> dayList;
+    private int index;
+    int todaysColor = Color.TRANSPARENT;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -106,7 +103,7 @@ public class ScreenSlidePageFragment extends Fragment {
 
         dayList = calendarLoader.loadInBackground(mCalendar, calendarName);
         // Toast.makeText(getActivity().getApplicationContext(), String.valueOf(dayList.size()), Toast.LENGTH_SHORT).show();
-        int today = mActualCalendar.get(Calendar.DAY_OF_MONTH);
+        final int today = mActualCalendar.get(Calendar.DAY_OF_MONTH);
 
         mCalendar.set(Calendar.DAY_OF_MONTH, 1);
         int beginningDay = mCalendar.get(Calendar.DAY_OF_WEEK);
@@ -155,7 +152,7 @@ public class ScreenSlidePageFragment extends Fragment {
         for (int i = 0; i < beginningDay + mCalendar.getActualMaximum(Calendar.DAY_OF_MONTH) - 2; i++) {
             final LinearLayout linearLayout = new LinearLayout(getActivity().getApplicationContext());
 
-           // getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            // getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
             linearLayout.setGravity(Gravity.CENTER);
             linearLayout.setLayoutParams(params);
@@ -193,7 +190,7 @@ public class ScreenSlidePageFragment extends Fragment {
                     linearLayout.setEnabled(true);
                     linearLayout.setId(0);
 
-                    bgShape.setStroke(6,ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
+                    bgShape.setStroke(6, getResources().getColor(R.color.colorCalendarToday));
 
                 } else {
 
@@ -226,26 +223,36 @@ public class ScreenSlidePageFragment extends Fragment {
                             dayList.get(_id).setColor((dayList.get(_id).getColor() + 1) % colorsArray.size());
                             GradientDrawable bgShape = (GradientDrawable) linearLayout.getBackground();
                             bgShape.setColor(colorsArray.get(dayList.get(_id).getColor()));
-                            // calendarLoader.saveToDatabase(dayList);
+                            if (day == today) {
+                                getTodaysColor();
+                                ((ScreenSlidePagerActivity) getActivity()).mDrawerList.getAdapter().notifyDataSetChanged();
+                            }
+
 
                         } else {
                             dayList.add(new Day(calendarName, year, month, day, 1));
                             GradientDrawable bgShape = (GradientDrawable) linearLayout.getBackground();
-
                             bgShape.setColor(colorsArray.get(1 % colorsArray.size()));
-                            // calendarLoader.saveToDatabase(dayList);
+                            if (day == today) {
+                                getTodaysColor();
+                                ((ScreenSlidePagerActivity) getActivity()).mDrawerList.getAdapter().notifyDataSetChanged();
+                            }
 
                         }
+
                     }
                 }
             });
         }
-
+        getTodaysColor();
+        ((ScreenSlidePagerActivity) getActivity()).mDrawerList.getAdapter().notifyDataSetChanged();
     }
 
     private void getCalendarsFromDatabase() {
         List<CalendarColors> calendarColorsList = calendarLoader.loadCalendarsInBackground();
+        if(index<calendarColorsList.size()){
         calendarName = calendarColorsList.get(index).getCalendarName();
+
         calendarDescriptions = calendarColorsList.get(index).getDescription();
         List<String> colorsArrayString = Arrays.asList(calendarColorsList.get(index).getColor().split("`"));
         if (colorsArray != null) {
@@ -256,7 +263,7 @@ public class ScreenSlidePageFragment extends Fragment {
         for (String s : colorsArrayString) {
             colorsArray.add(Integer.valueOf(s));
         }
-
+        }
     }
 
     @Override
@@ -274,19 +281,19 @@ public class ScreenSlidePageFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        calendarLoader.saveToDatabase(dayList);
+
         super.onDestroy();
     }
 
     public void unlockScreen() {
-        isLocked=false;
+        isLocked = false;
         GradientDrawable bgShape;
         for (int i = 0; i < gridLayout.getChildCount(); i++) {
 
             if (gridLayout.getChildAt(i).getId() > -1) {
                 bgShape = (GradientDrawable) gridLayout.getChildAt(i).getBackground();
                 if (gridLayout.getChildAt(i).getId() == 0) {
-                    bgShape.setStroke(6, Color.BLACK);
+                    bgShape.setStroke(6, getResources().getColor(R.color.colorCalendarToday));
                 } else {
                     gridLayout.getChildAt(i).setEnabled(true);
 
@@ -302,13 +309,13 @@ public class ScreenSlidePageFragment extends Fragment {
 
     public void lockScreen() {
 
-        isLocked=true;
+        isLocked = true;
         GradientDrawable bgShape;
         for (int i = 0; i < gridLayout.getChildCount(); i++) {
             if (gridLayout.getChildAt(i).getId() > -1) {
                 bgShape = (GradientDrawable) gridLayout.getChildAt(i).getBackground();
                 if (gridLayout.getChildAt(i).getId() == 0) {
-                    bgShape.setStroke(6, Color.BLACK);
+                    bgShape.setStroke(6, getResources().getColor(R.color.colorCalendarToday));
                     gridLayout.getChildAt(i).setEnabled(true);
                 } else {
                     gridLayout.getChildAt(i).setEnabled(false);
@@ -328,7 +335,19 @@ public class ScreenSlidePageFragment extends Fragment {
     public void editCalendar() {
         calendarLoader.saveToDatabase(dayList);
         Intent intent = new Intent(getActivity().getApplicationContext(), AddOrEditCalendar.class);
-        intent.putExtra("edit", calendarName);
+        intent.putExtra("edit", index);
         startActivity(intent);
     }
+
+    public void getTodaysColor() {
+
+        for (Day d : dayList) {
+            if (d.getDay() == mActualCalendar.get(Calendar.DAY_OF_MONTH)) {
+
+                todaysColor = colorsArray.get(d.getColor());
+                return;
+            } else todaysColor=Color.TRANSPARENT;
+        }
+    }
+
 }

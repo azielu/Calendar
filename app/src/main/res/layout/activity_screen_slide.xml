@@ -46,12 +46,12 @@
 
                 <TextView
                     android:id="@+id/unlock_text"
-                    android:textColor="@color/colorTextSecondary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/unlock_image"
                     android:layout_centerHorizontal="true"
                     android:text="Locked"
+                    android:textColor="@color/colorTextSecondary"
                     android:textSize="14sp"/>
             </RelativeLayout>
 
@@ -76,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/add_image"
                     android:layout_centerHorizontal="true"
-                    android:text="Add new"
+                    android:text="Stats"
                     android:textColor="@color/colorTextSecondary"
                     android:textSize="14sp"/>
             </RelativeLayout>
@@ -109,15 +109,44 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <ListView
+    <RelativeLayout
         android:id="@+id/left_drawer"
-        android:layout_width="240dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="bottom|start"
         android:background="#ffffff"
+        android:layout_marginRight="32dp"
+        android:layout_marginEnd="32dp"
         android:choiceMode="singleChoice"
         android:divider="@android:color/black"
-        android:dividerHeight="2dp"/>
+        android:dividerHeight="2dp">
+
+        <LinearLayout
+            android:id="@+id/drawer_title"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@color/colorCalendarBackground"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Twoja stara"
+                android:textSize="20sp"/>
+
+        </LinearLayout>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_below="@+id/drawer_title"
+            android:id="@+id/drawer_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </RelativeLayout>
 
 
 </android.support.v4.widget.DrawerLayout>

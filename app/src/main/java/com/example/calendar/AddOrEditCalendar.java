@@ -2,6 +2,7 @@ package com.example.calendar;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import me.priyesh.chroma.ChromaDialog;
@@ -31,15 +33,33 @@ import me.priyesh.chroma.ColorSelectListener;
  */
 public class AddOrEditCalendar extends AppCompatActivity {
 
+    List<Integer> colorsArray = new ArrayList<>();
+    List<String> colorsDescriptionArray = new ArrayList<>();
+    int newColor = Color.WHITE;
+    boolean anythingChanged = false;
     private String mCalendarName;
     private String mCalendarDescription;
     private String mCalendarColorsString;
     private String mCalendarColorsDescriptionString;
-    List<Integer> colorsArray = new ArrayList<>();
-    List<String> colorsDescriptionArray = new ArrayList<>();
-    int newColor = Color.WHITE;
     private Toolbar toolbar;
-    boolean anythingChanged = false;
+
+    private List<CalendarColors> calendarsList = Collections.emptyList();
+
+    private CalendarLoader calendarLoader;
+    private ColorsDetailsRecyclerViewAdapter colorsDetailsRecyclerViewAdapter;
+
+    private RecyclerView colorsRecyclerView;
+    private EditText name;
+    private EditText description;
+    private TextView addNewCalendarButton;
+    private TextView removeCalendarButton;
+    private TextView cancelCalendarButton;
+    private ImageView colorCircle;
+    private GradientDrawable bgShape;
+    private EditText colorDescriptionEdit;
+    private TextView addColorButton;
+    int index;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,37 +67,46 @@ public class AddOrEditCalendar extends AppCompatActivity {
         setContentView(R.layout.add_or_edit_calendar_activity);
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbar);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        final CalendarLoader calendarLoader = new CalendarLoader(getApplicationContext(), getContentResolver());
 
-        final ColorsDetailsRecyclerViewAdapter colorsDetailsRecyclerViewAdapter =
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
+        calendarLoader = new CalendarLoader(getApplicationContext(), getContentResolver());
+        calendarsList = calendarLoader.loadCalendarsInBackground();
+        colorsDetailsRecyclerViewAdapter =
                 new ColorsDetailsRecyclerViewAdapter(
                         AddOrEditCalendar.this,
                         colorsArray,
                         colorsDescriptionArray);
 
 
-        final RecyclerView colorsRecyclerView = (RecyclerView) findViewById(R.id.colors_recycler_view);
+        colorsRecyclerView = (RecyclerView) findViewById(R.id.colors_recycler_view);
+        name = (EditText) findViewById(R.id.new_calendar_name);
+        description = (EditText) findViewById(R.id.new_calendar_description);
+        addNewCalendarButton = (TextView) findViewById(R.id.new_calendar_add_button);
+        removeCalendarButton = (TextView) findViewById(R.id.remove_calendar_button);
+        cancelCalendarButton = (TextView) findViewById(R.id.new_calendar_cancel_button);
+        colorCircle = (ImageView) findViewById(R.id.circle);
+        bgShape = (GradientDrawable) colorCircle.getBackground();
+        colorDescriptionEdit = (EditText) findViewById(R.id.color_description_edit);
+        addColorButton = (TextView) findViewById(R.id.add_color);
+
+
         colorsRecyclerView.setAdapter(colorsDetailsRecyclerViewAdapter);
 
         GridLayoutManager linearLayoutManager = new GridLayoutManager(getApplicationContext(), 1);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
         colorsRecyclerView.setLayoutManager(linearLayoutManager);
 
-        final EditText name = (EditText) findViewById(R.id.new_calendar_name);
-        final EditText description = (EditText) findViewById(R.id.new_calendar_description);
-        final TextView addNewCalendarButton = (TextView) findViewById(R.id.new_calendar_add_button);
-        final TextView removeCalendarButton = (TextView) findViewById(R.id.remove_calendar_button);
-        final TextView cancelCalendarButton = (TextView) findViewById(R.id.new_calendar_cancel_button);
         cancelCalendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
 
             public void onClick(View v) {
-                                  onBackPressed();
-                           }
+                onBackPressed();
+            }
         });
-        final ImageView colorCircle = (ImageView) findViewById(R.id.circle);
-        final GradientDrawable bgShape = (GradientDrawable) colorCircle.getBackground();
+
+
         bgShape.setColor(Color.WHITE);
         colorCircle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,188 +127,19 @@ public class AddOrEditCalendar extends AppCompatActivity {
             }
         });
 
-       // final TextView colorDescription = (TextView) findViewById(R.id.color_description);
-        final EditText colorDescriptionEdit = (EditText) findViewById(R.id.color_description_edit);
-        final TextView addColorButton = (TextView) findViewById(R.id.add_color);
 
 
-        addColorButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (colorDescriptionEdit.getVisibility() == View.VISIBLE && !colorDescriptionEdit.getText().toString().equals("")) {
-                    View view = getCurrentFocus();
-                    if (view != null) {
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                    }
-                    colorsArray.add(newColor);
-                    colorsDescriptionArray.add(colorDescriptionEdit.getText().toString());
-                    colorsDetailsRecyclerViewAdapter.setData(colorsArray, colorsDescriptionArray);
-                    colorsDetailsRecyclerViewAdapter.notifyDataSetChanged();
-                   // colorDescription.setVisibility(View.VISIBLE);
-                  //  colorDescriptionEdit.setVisibility(View.GONE);
-                    colorDescriptionEdit.setText("");
-                    colorsRecyclerView.smoothScrollToPosition(colorsArray.size() - 1);
-                    anythingChanged = true;
-
-                } else {
-                   // colorDescription.setVisibility(View.GONE);
-                    colorDescriptionEdit.setVisibility(View.VISIBLE);
-                    Toast.makeText(AddOrEditCalendar.this, "Color description cannot be empty", Toast.LENGTH_SHORT).show();
-
-                }
-            }
-        });
-       // colorDescription.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                colorDescription.setVisibility(View.GONE);
-//                colorDescriptionEdit.setVisibility(View.VISIBLE);
-//            }
-//        });
 
 
-        mCalendarName = getIntent().getStringExtra("edit");
-        if (mCalendarName != null) {
-            removeCalendarButton.setVisibility(View.VISIBLE);
-            addNewCalendarButton.setText("SAVE");
+        initAddColorButton();
 
+        index = (getIntent().getIntExtra("edit", -1));
 
-            for (CalendarColors w : calendarLoader.loadCalendarsInBackground()) {
-
-                if (w.getCalendarName().equals(mCalendarName)) {
-
-                    mCalendarDescription = w.getDescription();
-                    mCalendarColorsString = w.getColor();
-                    mCalendarColorsDescriptionString = w.getColorDescription();
-
-                    name.setText(mCalendarName);
-                    if (mCalendarDescription != null) {
-                        description.setText(mCalendarDescription);
-                    }
-
-                    break;
-                }
-            }
-            splitColorsToArray();
-            colorsDetailsRecyclerViewAdapter.setData(colorsArray, colorsDescriptionArray);
-            colorsDetailsRecyclerViewAdapter.notifyDataSetChanged();
-
-
-            name.setText(mCalendarName);
-            description.setText(mCalendarDescription);
-
-            name.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    anythingChanged = true;
-                }
-            });
-
-            description.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    anythingChanged = true;
-                }
-            });
-
-            addNewCalendarButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!name.getText().toString().equals("")) {
-                        boolean isDuplicated = false;
-                        if (name.getText().toString().equals(mCalendarName)) {
-                        } else {
-                            for (CalendarColors w : calendarLoader.loadCalendarsInBackground()) {
-                                if (w.getCalendarName().equals(name.getText().toString())) {
-                                    isDuplicated = true;
-                                    break;
-                                }
-                            }
-                        }
-                        if (!isDuplicated) {
-                            packColorsToString();
-                            calendarLoader.saveCalendarsToDatabase(mCalendarName, name.getText().toString(),
-                                    description.getText().toString(),
-                                    mCalendarColorsString, mCalendarColorsDescriptionString);
-
-//                            Intent intent = new Intent(getApplicationContext(), ScreenSlidePagerActivity.class);
-//                            intent.putExtra("goTo", positionFinal);
-//                            startActivity(intent);
-                            finish();
-                        } else
-                            Toast.makeText(getApplicationContext(), "Calendar's name has to be unique.", Toast.LENGTH_LONG).show();
-                    } else
-                        Toast.makeText(getApplicationContext(), "Calendar's name cannot be empty.", Toast.LENGTH_LONG).show();
-                }
-            });
-
-            removeCalendarButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(AddOrEditCalendar.this);
-                    builder.setTitle("REMOVING CALENDAR")
-                            .setMessage("Are you sure?")
-                            .setCancelable(true)
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            })
-                            .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-
-                                            calendarLoader.deleteFromDatabase(mCalendarName);
-                                            finish();
-
-                                        }
-                                    }
-                            );
-                    AlertDialog alert = builder.create();
-                    alert.show();
-
-                }
-
-            });
+        if (index > -1) {
+            initEditMode();
 
         } else {
-            mCalendarColorsString = Color.parseColor("#45b70d") + "`" + Color.parseColor("#f5fc1e") + "`" + Color.parseColor("#ff1817") + "`";
-            mCalendarColorsDescriptionString = "Done`Almost Done`Failed";
-            splitColorsToArray();
-
-            colorsDetailsRecyclerViewAdapter.setData(colorsArray, colorsDescriptionArray);
-            colorsDetailsRecyclerViewAdapter.notifyDataSetChanged();
-
-            addNewCalendarButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!name.getText().toString().equals("")) {
-                        boolean isDuplicated = false;
-                        for (CalendarColors w : calendarLoader.loadCalendarsInBackground()) {
-                            if (w.getCalendarName().equals(name.getText().toString())) {
-                                isDuplicated = true;
-                                break;
-                            }
-                        }
-                        if (!isDuplicated) {
-                            packColorsToString();
-//                            Toast.makeText(AddOrEditCalendar.this, "aaa"+mCalendarColorsString+"aaaaa", Toast.LENGTH_LONG).show();
-//                            Toast.makeText(AddOrEditCalendar.this, colorsArray.toString(), Toast.LENGTH_LONG).show();
-                            calendarLoader.saveCalendarsToDatabase(null, name.getText().toString(),
-                                    description.getText().toString(),
-                                    mCalendarColorsString, mCalendarColorsDescriptionString);
-
-//                            Intent intent = new Intent(getApplicationContext(), ScreenSlidePagerActivity.class);
-//                            intent.putExtra("goTo", -1);
-//                            startActivity(intent);
-                            finish();
-                        } else
-                            Toast.makeText(getApplicationContext(), "Calendar's name has to be unique.", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Calendar's name cannot be empty.", Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
+            initAddNewMode();
         }
     }
 
@@ -325,7 +185,6 @@ public class AddOrEditCalendar extends AppCompatActivity {
         colorsArray.set(position, newColor);
     }
 
-
     public void deleteColor(int position) {
 
 
@@ -335,30 +194,213 @@ public class AddOrEditCalendar extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (!anythingChanged) {
-            super.onBackPressed();
-        } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(AddOrEditCalendar.this);
-            builder.setTitle("CHANGES WILL NOT BE SAVED")
-                    .setMessage("Are you sure about leaving?")
-                    .setCancelable(true)
-                    .setNegativeButton("Stay", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
+        if (!calendarsList.isEmpty()) {
+            if (!anythingChanged) {
+                super.onBackPressed();
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddOrEditCalendar.this);
+                builder.setTitle("CHANGES WILL NOT BE SAVED")
+                        .setMessage("Are you sure about leaving?")
+                        .setCancelable(true)
+                        .setNegativeButton("Stay", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
 
 
-                        }
-                    })
-                    .setPositiveButton("Leave", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    anythingChanged = false;
-                                    AddOrEditCalendar.super.onBackPressed();
-
-                                }
                             }
-                    )
-                    .create().show();
+                        })
+                        .setPositiveButton("Leave", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        anythingChanged = false;
+                                        AddOrEditCalendar.super.onBackPressed();
 
+                                    }
+                                }
+                        )
+                        .create().show();
+
+            }
         }
     }
 
+
+    private void initEditMode() {
+
+        calendarsList.get(index);
+        mCalendarName = calendarsList.get(index).getCalendarName();
+        removeCalendarButton.setVisibility(View.VISIBLE);
+        addNewCalendarButton.setText("SAVE");
+
+
+        for (CalendarColors w : calendarsList) {
+
+            if (w.getCalendarName().equals(mCalendarName)) {
+
+                mCalendarDescription = w.getDescription();
+                mCalendarColorsString = w.getColor();
+                mCalendarColorsDescriptionString = w.getColorDescription();
+
+                name.setText(mCalendarName);
+                if (mCalendarDescription != null) {
+                    description.setText(mCalendarDescription);
+                }
+
+                break;
+            }
+        }
+        splitColorsToArray();
+        colorsDetailsRecyclerViewAdapter.setData(colorsArray, colorsDescriptionArray);
+        colorsDetailsRecyclerViewAdapter.notifyDataSetChanged();
+
+
+        name.setText(mCalendarName);
+        description.setText(mCalendarDescription);
+
+        name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                anythingChanged = true;
+            }
+        });
+
+        description.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                anythingChanged = true;
+            }
+        });
+
+        addNewCalendarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!name.getText().toString().equals("")) {
+                    boolean isDuplicated = false;
+                    if (name.getText().toString().equals(mCalendarName)) {
+                    } else {
+                        for (CalendarColors w : calendarsList) {
+                            if (w.getCalendarName().equals(name.getText().toString())) {
+                                isDuplicated = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!isDuplicated) {
+                        packColorsToString();
+                        calendarLoader.saveCalendarsToDatabase(mCalendarName, name.getText().toString(),
+                                description.getText().toString(),
+                                mCalendarColorsString, mCalendarColorsDescriptionString);
+
+                        Intent intent = new Intent(getApplicationContext(), ScreenSlidePagerActivity.class);
+                        intent.putExtra("goTo", index);
+                        startActivity(intent);
+                        finish();
+                    } else
+                        Toast.makeText(getApplicationContext(), "Calendar's name has to be unique.", Toast.LENGTH_LONG).show();
+                } else
+                    Toast.makeText(getApplicationContext(), "Calendar's name cannot be empty.", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        removeCalendarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddOrEditCalendar.this);
+                builder.setTitle("REMOVING CALENDAR")
+                        .setMessage("Are you sure?")
+                        .setCancelable(true)
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        })
+                        .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+
+                                        calendarLoader.deleteFromDatabase(mCalendarName);
+                                        Intent intent = new Intent(getApplicationContext(), ScreenSlidePagerActivity.class);
+                                        intent.putExtra("goTo", -1);
+                                        startActivity(intent);
+                                        finish();
+
+                                    }
+                                }
+                        );
+                AlertDialog alert = builder.create();
+                alert.show();
+
+            }
+
+        });
+    }
+
+    private void initAddNewMode() {
+
+        mCalendarColorsString = Color.parseColor("#45b70d") + "`" + Color.parseColor("#f5fc1e") + "`" + Color.parseColor("#ff1817") + "`";
+        mCalendarColorsDescriptionString = "Done`Almost Done`Failed";
+        splitColorsToArray();
+
+        colorsDetailsRecyclerViewAdapter.setData(colorsArray, colorsDescriptionArray);
+        colorsDetailsRecyclerViewAdapter.notifyDataSetChanged();
+
+        addNewCalendarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!name.getText().toString().equals("")) {
+                    boolean isDuplicated = false;
+                    for (CalendarColors w : calendarsList) {
+                        if (w.getCalendarName().equals(name.getText().toString())) {
+                            isDuplicated = true;
+                            break;
+                        }
+                    }
+                    if (!isDuplicated) {
+
+                        packColorsToString();
+//                            Toast.makeText(AddOrEditCalendar.this, "aaa"+mCalendarColorsString+"aaaaa", Toast.LENGTH_LONG).show();
+//                            Toast.makeText(AddOrEditCalendar.this, colorsArray.toString(), Toast.LENGTH_LONG).show();
+                        calendarLoader.saveCalendarsToDatabase(null, name.getText().toString(),
+                                description.getText().toString(),
+                                mCalendarColorsString, mCalendarColorsDescriptionString);
+                        Intent intent = new Intent(getApplicationContext(), ScreenSlidePagerActivity.class);
+                        intent.putExtra("goTo", -1);
+                        startActivity(intent);
+                        finish();
+
+
+                    } else
+                        Toast.makeText(getApplicationContext(), "Calendar's name has to be unique.", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Calendar's name cannot be empty.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    private void initAddColorButton(){
+        addColorButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (colorDescriptionEdit.getVisibility() == View.VISIBLE && !colorDescriptionEdit.getText().toString().equals("")) {
+                    View view = getCurrentFocus();
+                    if (view != null) {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
+                    colorsArray.add(newColor);
+                    colorsDescriptionArray.add(colorDescriptionEdit.getText().toString());
+                    colorsDetailsRecyclerViewAdapter.setData(colorsArray, colorsDescriptionArray);
+                    colorsDetailsRecyclerViewAdapter.notifyDataSetChanged();
+
+                    colorDescriptionEdit.setText("");
+                    colorsRecyclerView.smoothScrollToPosition(colorsArray.size() - 1);
+                    anythingChanged = true;
+
+                } else {
+
+                    colorDescriptionEdit.setVisibility(View.VISIBLE);
+                    Toast.makeText(AddOrEditCalendar.this, "Color description cannot be empty", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+    }
 }

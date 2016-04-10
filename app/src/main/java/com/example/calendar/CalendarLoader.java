@@ -60,7 +60,7 @@ public class CalendarLoader extends AsyncTaskLoader<List<Day>> {
                     String colorDescription = mCursor.getString(mCursor.getColumnIndex(CalendarsNamesContract.CalendarNamesColumns.CALENDARS_NAMES_COLORS_DESCRIPTION));
 
 
-                    CalendarColors singleEntry = new CalendarColors(name, description, color,colorDescription);
+                    CalendarColors singleEntry = new CalendarColors(name, description, color, colorDescription);
 
                     entries.add(singleEntry);
 
@@ -119,7 +119,7 @@ public class CalendarLoader extends AsyncTaskLoader<List<Day>> {
             ContentValues contentValues = new ContentValues();
             contentValues.put(CalendarContract.CalendarColumns.CALENDAR_COLOR, d.getColor());
             String selection = CalendarContract.CalendarColumns.CALENDAR_NAME + " =? and " + CalendarContract.Calendar.CALENDAR_YEAR + " =? and " + CalendarContract.Calendar.CALENDAR_MONTH + " =? and " + CalendarContract.Calendar.CALENDAR_DAY + " =?";
-            String[] selectionArgs = {String.valueOf(d.getName()),String.valueOf(d.getYear()), String.valueOf(d.getMonth()), String.valueOf(d.getDay())};
+            String[] selectionArgs = {String.valueOf(d.getName()), String.valueOf(d.getYear()), String.valueOf(d.getMonth()), String.valueOf(d.getDay())};
             int rowUpdated = mContentResolver.update(CalendarContract.URI_TABLE, contentValues, selection, selectionArgs);
             if (rowUpdated == 0) {
                 contentValues.put(CalendarContract.CalendarColumns.CALENDAR_NAME, d.getName());
@@ -161,15 +161,13 @@ public class CalendarLoader extends AsyncTaskLoader<List<Day>> {
     }
 
 
-
-
     protected void deleteFromDatabase(String name) {
 
-            String selection = CalendarsNamesContract.CalendarNamesColumns.CALENDARS_NAMES_NAME + " =?";
-            String[] selectionArgs = {name};
-            mContentResolver.delete(CalendarsNamesContract.URI_TABLE, selection, selectionArgs);
+        String selection = CalendarsNamesContract.CalendarNamesColumns.CALENDARS_NAMES_NAME + " =?";
+        String[] selectionArgs = {name};
+        mContentResolver.delete(CalendarsNamesContract.URI_TABLE, selection, selectionArgs);
 
-        selection =  CalendarContract.CalendarColumns.CALENDAR_NAME + " =?";
+        selection = CalendarContract.CalendarColumns.CALENDAR_NAME + " =?";
         selectionArgs[0] = name;
         mContentResolver.delete(CalendarsNamesContract.URI_TABLE, selection, selectionArgs);
 

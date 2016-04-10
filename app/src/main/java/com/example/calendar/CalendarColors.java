@@ -5,13 +5,13 @@ package com.example.calendar;
  */
 public class CalendarColors {
 
-    String mCalendarName,mDescription, mColor,mColorDescription;
+    String mCalendarName, mDescription, mColor, mColorDescription;
 
-    public CalendarColors(String calendarName, String description, String color,String colorDescription) {
+    public CalendarColors(String calendarName, String description, String color, String colorDescription) {
         mCalendarName = calendarName;
         mDescription = description;
         mColor = color;
-        mColorDescription=colorDescription;
+        mColorDescription = colorDescription;
 
 
     }

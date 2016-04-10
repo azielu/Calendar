@@ -30,28 +30,23 @@ public class ColorsDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Color
 
     private Context mContext;
 
-    public ColorsDetailsRecyclerViewAdapter(Context context, List<Integer> colors, List<String> desriptions) {
+    public ColorsDetailsRecyclerViewAdapter(Context context, List<Integer> colors, List<String> descriptions) {
         mContext = context;
         mInflater = LayoutInflater.from(mContext);
         mColors = colors;
-        mDescriptions = desriptions;
+        mDescriptions = descriptions;
     }
 
-    // Called when the RecyclerView needs a new RecyclerView.ViewHolder (NoteHolder)
-    // to represent an item.  We inflate the XML layout and return our view (NoteHolder)
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.custom_colors_adapter_layout, parent, false);
         return new Holder(view);
     }
 
-    // Called by RecyclerView to display the data (a note) at the specified position.
-    // This method needs to update the contents of the view to reflect the item at the
-    // given position e.g. we are updating the view here with the data
-    @Override
+       @Override
     public void onBindViewHolder(Holder holder, int position) {
         holder.mDescription.setText(mDescriptions.get(position) + "");
-        if (position == getItemCount() - 1 && position!=0) {
+        if (position == getItemCount() - 1 && position != 0) {
             holder.mDeleteColor.setBackgroundResource(android.R.drawable.ic_delete);
         } else holder.mDeleteColor.setBackgroundResource(android.R.drawable.ic_menu_edit);
 
@@ -81,14 +76,11 @@ public class ColorsDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Color
         notifyItemRemoved(position);
     }
 
-
     public void notifyImageObtained() {
         notifyDataSetChanged();
     }
 
-    // Simple nested class that holds the various view components for the adapter
-    // and as specified in custom_notes_adapter_layout.xml which we just created
-    public class Holder extends RecyclerView.ViewHolder {
+       public class Holder extends RecyclerView.ViewHolder {
 
         TextView mDescription, mDeleteColor;
         EditText mDescriptionEdit;
@@ -121,7 +113,7 @@ public class ColorsDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Color
                     mDeleteColor.setVisibility(View.VISIBLE);
                     mDescriptionEdit.setText(mDescription.getText());
                     mDescriptionEdit.requestFocus();
-                    ((AddOrEditCalendar) mContext).anythingChanged=true;
+                    ((AddOrEditCalendar) mContext).anythingChanged = true;
                 }
             });
 
@@ -130,17 +122,17 @@ public class ColorsDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Color
                 public void onClick(View v) {
 
                     if (mDescriptionEdit.getVisibility() == (View.VISIBLE)) {
-                        ((AddOrEditCalendar) mContext).updateColor(getAdapterPosition(), mDescriptionEdit.getText().toString(),mColors.get(getAdapterPosition()));
+                        ((AddOrEditCalendar) mContext).updateColor(getAdapterPosition(), mDescriptionEdit.getText().toString(), mColors.get(getAdapterPosition()));
                         mDescription.setText(mDescriptionEdit.getText());
                         mDescriptionEdit.setText("");
                         mDescriptionEdit.setVisibility(View.GONE);
                         mDescription.setVisibility(View.VISIBLE);
                         mDeleteColor.setBackgroundResource(android.R.drawable.ic_menu_edit);
-                        if (getAdapterPosition() == getItemCount() - 1 && getAdapterPosition()!=0) {
+                        if (getAdapterPosition() == getItemCount() - 1 && getAdapterPosition() != 0) {
                             mDeleteColor.setBackgroundResource(android.R.drawable.ic_delete);
                         }
                     } else {
-                        if (getAdapterPosition() == getItemCount() - 1 && getAdapterPosition()!=0) {
+                        if (getAdapterPosition() == getItemCount() - 1 && getAdapterPosition() != 0) {
 
 
                             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -153,17 +145,17 @@ public class ColorsDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Color
                                         }
                                     })
                                     .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            ((AddOrEditCalendar) mContext).deleteColor(getAdapterPosition());
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    ((AddOrEditCalendar) mContext).deleteColor(getAdapterPosition());
                                                     notifyDataSetChanged();
-                                                                                        dialog.dismiss();
-                                            ((AddOrEditCalendar) mContext).anythingChanged=true;
+                                                    dialog.dismiss();
+                                                    ((AddOrEditCalendar) mContext).anythingChanged = true;
 
-                                    }}
+                                                }
+                                            }
                                     );
                             AlertDialog alert = builder.create();
                             alert.show();
-
 
 
                         } else {
@@ -173,7 +165,7 @@ public class ColorsDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Color
                             mDeleteColor.setBackgroundResource(android.R.drawable.checkbox_on_background);
                             mDeleteColor.setVisibility(View.VISIBLE);
                             mDescriptionEdit.requestFocus();
-                            ((AddOrEditCalendar) mContext).anythingChanged=true;
+                            ((AddOrEditCalendar) mContext).anythingChanged = true;
                         }
 
                     }
@@ -194,14 +186,14 @@ public class ColorsDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Color
 
                                             mColors.set(getAdapterPosition(), color);
                                             notifyDataSetChanged();
-                                            ((AddOrEditCalendar) mContext).anythingChanged=true;
+                                            ((AddOrEditCalendar) mContext).anythingChanged = true;
                                         }
-                            })
+                                    })
                             .create()
                             .show(((FragmentActivity) mContext).getSupportFragmentManager(), "ChromaDialog");
 
-        }
-    });
+                }
+            });
         }
 
     }

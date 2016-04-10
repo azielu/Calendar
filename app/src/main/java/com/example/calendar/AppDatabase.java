@@ -13,16 +13,13 @@ public class AppDatabase extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "calendar.db";
     private static final int DATABASE_VERSION = 1;
 
-    interface Tables {
-        String CALENDAR = "calendar";
-        String CALENDARS_NAMES = "names";
-
-    }
-
     public AppDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    public static void deleteDatabase(Context context) {
+        context.deleteDatabase(DATABASE_NAME);
+    }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -59,8 +56,10 @@ public class AppDatabase extends SQLiteOpenHelper {
         }
     }
 
-    public static void deleteDatabase(Context context) {
-        context.deleteDatabase(DATABASE_NAME);
+    interface Tables {
+        String CALENDAR = "calendar";
+        String CALENDARS_NAMES = "names";
+
     }
 
 

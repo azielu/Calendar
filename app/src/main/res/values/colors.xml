@@ -11,4 +11,5 @@
 
     <color name="colorBackground">@color/md_orange_50</color>
     <color name="colorCalendarBackground">@color/md_orange_200</color>
+    <color name="colorCalendarToday">@color/md_red_500</color>
 </resources>

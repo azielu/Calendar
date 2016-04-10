@@ -20,14 +20,12 @@ import android.support.annotation.Nullable;
 public class AppProvider extends ContentProvider {
 
 
-    protected AppDatabase mOpenHelper;
-    private static final UriMatcher sUriMatcher = buildUriMatcher();
-
     private static final int CALENDAR = 100;
     private static final int CALENDAR_ID = 101;
     private static final int CALENDAR_NAMES = 200;
     private static final int CALENDAR_NAMES_ID = 201;
-
+    private static final UriMatcher sUriMatcher = buildUriMatcher();
+    protected AppDatabase mOpenHelper;
 
     private static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);

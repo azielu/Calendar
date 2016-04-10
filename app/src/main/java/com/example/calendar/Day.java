@@ -5,7 +5,7 @@ package com.example.calendar;
  */
 public class Day {
 
-    private int mId, mYear, mMonth, mDay,mColor;
+    private int mId, mYear, mMonth, mDay, mColor;
     private String mName;
 
     public Day(String name, int year, int month, int day, int color) {
