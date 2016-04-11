@@ -7,7 +7,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.DisplayMetrics;
+
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +16,7 @@ import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -102,7 +102,7 @@ public class ScreenSlidePageFragment extends Fragment {
         GridLayout gridLayout = (GridLayout) rootView.findViewById(R.id.calendar_gridlayout);
 
         dayList = calendarLoader.loadInBackground(mCalendar, calendarName);
-        // Toast.makeText(getActivity().getApplicationContext(), String.valueOf(dayList.size()), Toast.LENGTH_SHORT).show();
+
         final int today = mActualCalendar.get(Calendar.DAY_OF_MONTH);
 
         mCalendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -112,27 +112,6 @@ public class ScreenSlidePageFragment extends Fragment {
             gridLayout.removeAllViews();
         }
 
-
-//        String[] dayOfWeek = new String[]{"Mo.", "Tu.", "We.", "Th.", "Fr.", "Sa.", "Su."};
-//
-//        for (int i = 0; i < 7; i++) {
-//            TextView text = new TextView(getActivity().getApplicationContext());
-//            text.setTextColor(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
-//            text.setText(dayOfWeek[i]);
-//            text.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
-//            text.setGravity(Gravity.CENTER);
-//            text.setBackgroundColor(Color.BLUE);
-//
-//            LinearLayout linearLayout = new LinearLayout(getActivity().getApplicationContext());
-//
-//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,Gravity.CENTER);
-//            linearLayout.setLayoutParams(params);
-//            //linearLayout.setPadding(0, 20, 0, 20);
-//            linearLayout.setGravity(Gravity.CENTER);
-//            gridLayout.addView(linearLayout);
-//            linearLayout.addView(text);
-//
-//        }
 
         TextView yearText = (TextView) rootView.findViewById(R.id.year_textview);
         TextView monthText = (TextView) rootView.findViewById(R.id.month_textview);
@@ -152,7 +131,7 @@ public class ScreenSlidePageFragment extends Fragment {
         for (int i = 0; i < beginningDay + mCalendar.getActualMaximum(Calendar.DAY_OF_MONTH) - 2; i++) {
             final LinearLayout linearLayout = new LinearLayout(getActivity().getApplicationContext());
 
-            // getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
             linearLayout.setGravity(Gravity.CENTER);
             linearLayout.setLayoutParams(params);
