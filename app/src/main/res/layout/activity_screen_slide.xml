@@ -76,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/add_image"
                     android:layout_centerHorizontal="true"
-                    android:text="Stats"
+                    android:text="New calendar"
                     android:textColor="@color/colorTextSecondary"
                     android:textSize="14sp"/>
             </RelativeLayout>
@@ -132,7 +132,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Twoja stara"
+                android:text=""
                 android:textSize="20sp"/>
 
         </LinearLayout>

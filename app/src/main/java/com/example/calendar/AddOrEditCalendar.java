@@ -71,6 +71,7 @@ public class AddOrEditCalendar extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         calendarLoader = new CalendarLoader(getApplicationContext(), getContentResolver());
+        
         calendarsList = calendarLoader.loadCalendarsInBackground();
         colorsDetailsRecyclerViewAdapter =
                 new ColorsDetailsRecyclerViewAdapter(

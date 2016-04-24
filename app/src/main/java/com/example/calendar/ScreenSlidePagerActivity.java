@@ -53,10 +53,9 @@ public class ScreenSlidePagerActivity extends AppCompatActivity {
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
 
-    private RelativeLayout unlockingBtn = (RelativeLayout) findViewById(R.id.unlock_btn);
-    private ImageView unlockingImg = (ImageView) findViewById(R.id.unlock_image);
-    private TextView unlockingTxt = (TextView) findViewById(R.id.unlock_text);
-
+    private RelativeLayout unlockingBtn;
+    private ImageView unlockingImg;
+    private TextView unlockingTxt;
 
     private void initCalendarsNames() {
         calendarsNames.clear();
@@ -162,7 +161,9 @@ public class ScreenSlidePagerActivity extends AppCompatActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
         setSupportActionBar(mToolbar);
-
+        unlockingBtn = (RelativeLayout) findViewById(R.id.unlock_btn);
+        unlockingImg = (ImageView) findViewById(R.id.unlock_image);
+        unlockingTxt = (TextView) findViewById(R.id.unlock_text);
 
         calendarLoader = new CalendarLoader(getApplicationContext(), getContentResolver());
 
