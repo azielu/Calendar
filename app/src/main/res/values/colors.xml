@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/md_orange_400</color>
-    <color name="colorPrimaryDark">@color/md_orange_600</color>
+    <color name="colorPrimary">@color/md_deep_purple_500</color>
+    <color name="colorPrimaryDark">@color/md_deep_purple_800</color>
+    <color name="colorPrimaryBright">@color/md_deep_purple_300</color>
     <color name="colorAccent">@color/md_pink_500</color>
     <color name="colorTextPrimary">@color/md_white_1000</color>
     <color name="colorTextPrimaryDark">@color/md_grey_400</color>
@@ -9,7 +10,25 @@
     <color name="colorTextSecondary">@color/md_black_1000</color>
     <color name="colorTextSecondaryBright">@color/md_grey_800</color>
 
-    <color name="colorBackground">@color/md_orange_50</color>
-    <color name="colorCalendarBackground">@color/md_orange_200</color>
+    <color name="colorBackground">@color/md_deep_purple_50</color>
+    <color name="colorCalendarBackground">@color/md_deep_purple_200</color>
     <color name="colorCalendarToday">@color/md_red_500</color>
 </resources>
+
+<!--
+    <?xml version="1.0" encoding="utf-8"?>
+<resources>
+<color name="colorPrimary">@color/md_orange_400</color>
+<color name="colorPrimaryDark">@color/md_orange_600</color>
+<color name="colorAccent">@color/md_pink_500</color>
+<color name="colorTextPrimary">@color/md_white_1000</color>
+<color name="colorTextPrimaryDark">@color/md_grey_400</color>
+
+<color name="colorTextSecondary">@color/md_black_1000</color>
+<color name="colorTextSecondaryBright">@color/md_grey_800</color>
+
+<color name="colorBackground">@color/md_orange_50</color>
+<color name="colorCalendarBackground">@color/md_orange_200</color>
+<color name="colorCalendarToday">@color/md_red_500</color>
+</resources>
+-->

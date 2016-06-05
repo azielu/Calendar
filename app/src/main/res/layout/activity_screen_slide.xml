@@ -51,7 +51,7 @@
                     android:layout_below="@+id/unlock_image"
                     android:layout_centerHorizontal="true"
                     android:text="Locked"
-                    android:textColor="@color/colorTextSecondary"
+                    android:textColor="@color/colorTextPrimary"
                     android:textSize="14sp"/>
             </RelativeLayout>
 
@@ -76,8 +76,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/add_image"
                     android:layout_centerHorizontal="true"
-                    android:text="New calendar"
-                    android:textColor="@color/colorTextSecondary"
+                    android:text="New habit"
+                    android:textColor="@color/colorTextPrimary"
                     android:textSize="14sp"/>
             </RelativeLayout>
 
@@ -103,7 +103,7 @@
                     android:layout_below="@+id/edit_image"
                     android:layout_centerHorizontal="true"
                     android:text="Edit"
-                    android:textColor="@color/colorTextSecondary"
+                    android:textColor="@color/colorTextPrimary"
                     android:textSize="14sp"/>
             </RelativeLayout>
         </LinearLayout>
@@ -114,35 +114,60 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="bottom|start"
-        android:background="#ffffff"
-        android:layout_marginRight="32dp"
         android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:background="#ffffff"
         android:choiceMode="singleChoice"
         android:divider="@android:color/black"
         android:dividerHeight="2dp">
 
-        <LinearLayout
+       <FrameLayout
+           android:layout_alignParentTop="true"
+           android:id="@+id/drawer_image"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+        <ImageView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/build_good_habits">
+
+        </ImageView>
+        <ImageView
+            android:id="@+id/settingsImage"
+            android:src="@drawable/settings"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="fitXY"
+            android:layout_margin="3dp"
+            android:layout_gravity="end"
+
+            />
+       </FrameLayout>
+        <TextView
             android:id="@+id/drawer_title"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:background="@color/colorCalendarBackground"
-            android:orientation="vertical"
-            >
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/drawer_image"
+            android:background="@color/colorPrimary"
+            android:paddingBottom="8dp"
+            android:paddingLeft="32dp"
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textSize="20sp"/>
-
-        </LinearLayout>
+            android:paddingStart="32dp"
+            android:paddingTop="8dp"
+            android:text="YOUR HABITS:"
+            android:textColor="@color/colorTextPrimaryDark"
+            android:textSize="20sp"/>
 
 
         <android.support.v7.widget.RecyclerView
-            android:layout_below="@+id/drawer_title"
             android:id="@+id/drawer_list_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_below="@+id/drawer_title">
 
         </android.support.v7.widget.RecyclerView>
 

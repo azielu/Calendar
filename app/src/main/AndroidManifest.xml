@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    package="com.example.calendar"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest package="com.example.calendar"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
 
     <application
-
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:launchMode="singleTask"
-            android:name="ScreenSlidePagerActivity"
+            android:name=".ScreenSlidePagerActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -22,7 +23,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity
             android:name=".AddOrEditCalendar"
             android:label="@string/app_name"
@@ -31,13 +31,31 @@
             android:windowSoftInputMode="adjustNothing">
         </activity>
 
+        <activity
+            android:name=".SettingsActivity"
+            android:label="Settings"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustNothing">
+        </activity>
         <provider
-
             android:name=".AppProvider"
-
             android:authorities="com.example.calendar.provider">
-
         </provider>
-    </application>
+
+        <receiver android:name=".AlarmReceiver">
+        </receiver>
+        <receiver
+            android:name=".BootReceiver"
+            android:enabled="true"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </receiver>
+            </application>
 
 </manifest>

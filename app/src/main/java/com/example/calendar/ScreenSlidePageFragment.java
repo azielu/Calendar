@@ -1,13 +1,14 @@
 package com.example.calendar;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -26,8 +26,8 @@ import java.util.Locale;
 
 public class ScreenSlidePageFragment extends Fragment {
 
-    final Calendar mCalendar = Calendar.getInstance();
-    final Calendar mActualCalendar = Calendar.getInstance();
+    Calendar mCalendar;
+    Calendar mActualCalendar;
     public boolean isLocked = true;
     ViewGroup rootView;
     GridLayout gridLayout;
@@ -40,6 +40,10 @@ public class ScreenSlidePageFragment extends Fragment {
     private List<Day> dayList;
     private int index;
     int todaysColor = Color.TRANSPARENT;
+    int delayTimeHour = 0;
+    int delayTimeMinute = 0;
+
+    public SharedPreferences prefs;
 
 
     @Override
@@ -53,7 +57,7 @@ public class ScreenSlidePageFragment extends Fragment {
         calendarLoader = new CalendarLoader(getActivity().getApplicationContext(), getActivity().getContentResolver());
         calendarNameTextView = (TextView) rootView.findViewById(R.id.calendar_name);
         calendarDescriptionTextView = (TextView) rootView.findViewById(R.id.calendar_description);
-
+        mCalendar = Calendar.getInstance();
 
         DisplayCalendar();
 
@@ -100,14 +104,21 @@ public class ScreenSlidePageFragment extends Fragment {
     public void DisplayCalendar() {
         getCalendarsFromDatabase();
         GridLayout gridLayout = (GridLayout) rootView.findViewById(R.id.calendar_gridlayout);
-
+        prefs = getActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        delayTimeHour =prefs.getInt("DelayTimeHour",0);
+        delayTimeMinute = prefs.getInt("DelayTimeMinute",0);
         dayList = calendarLoader.loadInBackground(mCalendar, calendarName);
-
+        mActualCalendar = Calendar.getInstance();
+        mActualCalendar.add(Calendar.HOUR_OF_DAY, -delayTimeHour);
+        mActualCalendar.add(Calendar.MINUTE, -delayTimeMinute);
         final int today = mActualCalendar.get(Calendar.DAY_OF_MONTH);
 
         mCalendar.set(Calendar.DAY_OF_MONTH, 1);
-        int beginningDay = mCalendar.get(Calendar.DAY_OF_WEEK);
-        int dayDisplayed = 1;
+        int beginningDay = mCalendar.get(Calendar.DAY_OF_WEEK)-2;
+        if (beginningDay < 0) {
+            beginningDay += 7;
+        }
+                int dayDisplayed = 1;
         if (gridLayout.getChildCount() > 0) {
             gridLayout.removeAllViews();
         }
@@ -128,7 +139,7 @@ public class ScreenSlidePageFragment extends Fragment {
         monthText.setText(String.valueOf(mCalendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US)));
 
 
-        for (int i = 0; i < beginningDay + mCalendar.getActualMaximum(Calendar.DAY_OF_MONTH) - 2; i++) {
+        for (int i = 0; i < beginningDay + mCalendar.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
             final LinearLayout linearLayout = new LinearLayout(getActivity().getApplicationContext());
 
 
@@ -140,7 +151,7 @@ public class ScreenSlidePageFragment extends Fragment {
             linearLayout.setBackgroundResource(R.drawable.shape);
             GradientDrawable bgShape = (GradientDrawable) linearLayout.getBackground();
 
-            if (i < beginningDay - 2) {
+            if (i < beginningDay) {
                 text.setText("");
                 bgShape.setColor(Color.TRANSPARENT);
                 bgShape.setStroke(0, Color.TRANSPARENT);
@@ -229,19 +240,19 @@ public class ScreenSlidePageFragment extends Fragment {
 
     private void getCalendarsFromDatabase() {
         List<CalendarColors> calendarColorsList = calendarLoader.loadCalendarsInBackground();
-        if(index<calendarColorsList.size()){
-        calendarName = calendarColorsList.get(index).getCalendarName();
+        if (index < calendarColorsList.size()) {
+            calendarName = calendarColorsList.get(index).getCalendarName();
 
-        calendarDescriptions = calendarColorsList.get(index).getDescription();
-        List<String> colorsArrayString = Arrays.asList(calendarColorsList.get(index).getColor().split("`"));
-        if (colorsArray != null) {
-            colorsArray.clear();
-        }
-        colorsArray.add(Color.TRANSPARENT);
+            calendarDescriptions = calendarColorsList.get(index).getDescription();
+            List<String> colorsArrayString = Arrays.asList(calendarColorsList.get(index).getColor().split("`"));
+            if (colorsArray != null) {
+                colorsArray.clear();
+            }
+            colorsArray.add(Color.TRANSPARENT);
 
-        for (String s : colorsArrayString) {
-            colorsArray.add(Integer.valueOf(s));
-        }
+            for (String s : colorsArrayString) {
+                colorsArray.add(Integer.valueOf(s));
+            }
         }
     }
 
@@ -325,7 +336,7 @@ public class ScreenSlidePageFragment extends Fragment {
 
                 todaysColor = colorsArray.get(d.getColor());
                 return;
-            } else todaysColor=Color.TRANSPARENT;
+            } else todaysColor = Color.TRANSPARENT;
         }
     }
 

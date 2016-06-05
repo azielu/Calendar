@@ -56,6 +56,81 @@ public class ScreenSlidePagerActivity extends AppCompatActivity {
     private RelativeLayout unlockingBtn;
     private ImageView unlockingImg;
     private TextView unlockingTxt;
+    private ImageView settingsButton;
+
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_screen_slide);
+
+        mToolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
+        setSupportActionBar(mToolbar);
+        unlockingBtn = (RelativeLayout) findViewById(R.id.unlock_btn);
+        unlockingImg = (ImageView) findViewById(R.id.unlock_image);
+        unlockingTxt = (TextView) findViewById(R.id.unlock_text);
+        settingsButton = (ImageView) findViewById(R.id.settingsImage);
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
+        calendarLoader = new CalendarLoader(getApplicationContext(), getContentResolver());
+
+        initCalendarsNames();
+        initDrawer();
+        initPageViewer();
+    }
+
+    @Override
+    protected void onResume() {
+        this.doubleBackToExitPressedOnce = false;
+        super.onResume();
+
+        updateNumPages();
+        calendarsNames.clear();
+        for (CalendarColors w : calendarLoader.loadCalendarsInBackground()) {
+            if (w.getCalendarName() != null && !w.getCalendarName().equals("")) {
+                calendarsNames.add(w.getCalendarName());
+            }
+
+        }
+        mPager.getAdapter().notifyDataSetChanged();
+
+        DrawerRecyclerViewAdapter drawerRecyclerViewAdapter =
+                new DrawerRecyclerViewAdapter(
+                        ScreenSlidePagerActivity.this,
+                        calendarsNames);
+
+        mDrawerList.setAdapter(drawerRecyclerViewAdapter);
+
+
+        switch (getIntent().getIntExtra("goTo", 0)) {
+            case 0: {
+                mPager.setCurrentItem(0, true);
+                break;
+            }
+
+            case -1: {
+                mPager.setCurrentItem(NUM_PAGES, true);
+                getIntent().putExtra("goTo", 0);
+                break;
+            }
+
+            default: {
+                mPager.setCurrentItem(getIntent().getIntExtra("goTo", 0), true);
+                getIntent().putExtra("goTo", 0);
+                break;
+            }
+
+        }
+
+
+        initBottomButtons();
+    }
 
     private void initCalendarsNames() {
         calendarsNames.clear();
@@ -122,59 +197,10 @@ public class ScreenSlidePagerActivity extends AppCompatActivity {
 
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-    }
-
-    private void initPageViewer() {
-        mPager = (ViewPager) findViewById(R.id.pager);
-
-        updateNumPages();
-
-        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
-        mPager.setOffscreenPageLimit(NUM_PAGES);
-        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
-
-                                       {
-                                           @Override
-                                           public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                                           }
-
-                                           @Override
-                                           public void onPageSelected(int position) {
-                                               mDrawerList.getAdapter().notifyDataSetChanged();
-                                           }
-
-                                           @Override
-                                           public void onPageScrollStateChanged(int state) {
-
-                                           }
-                                       }
-
-        );
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_screen_slide);
-
-        mToolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
-        setSupportActionBar(mToolbar);
-        unlockingBtn = (RelativeLayout) findViewById(R.id.unlock_btn);
-        unlockingImg = (ImageView) findViewById(R.id.unlock_image);
-        unlockingTxt = (TextView) findViewById(R.id.unlock_text);
-
-        calendarLoader = new CalendarLoader(getApplicationContext(), getContentResolver());
-
-        initCalendarsNames();
-        initDrawer();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
         getSupportActionBar().setHomeButtonEnabled(true);
-
-        initPageViewer();
     }
 
     @Override
@@ -207,51 +233,34 @@ public class ScreenSlidePagerActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        this.doubleBackToExitPressedOnce = false;
-        super.onResume();
+    private void initPageViewer() {
+        mPager = (ViewPager) findViewById(R.id.pager);
 
         updateNumPages();
-        calendarsNames.clear();
-        for (CalendarColors w : calendarLoader.loadCalendarsInBackground()) {
-            if (w.getCalendarName() != null && !w.getCalendarName().equals("")) {
-                calendarsNames.add(w.getCalendarName());
-            }
 
-        }
-        mPager.getAdapter().notifyDataSetChanged();
+        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
+        mPager.setOffscreenPageLimit(NUM_PAGES);
+        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
 
-        DrawerRecyclerViewAdapter drawerRecyclerViewAdapter =
-                new DrawerRecyclerViewAdapter(
-                        ScreenSlidePagerActivity.this,
-                        calendarsNames);
+                                       {
+                                           @Override
+                                           public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-        mDrawerList.setAdapter(drawerRecyclerViewAdapter);
+                                           }
 
+                                           @Override
+                                           public void onPageSelected(int position) {
+                                               mDrawerList.getAdapter().notifyDataSetChanged();
+                                           }
 
-        switch (getIntent().getIntExtra("goTo", 0)) {
-            case 0: {
-                mPager.setCurrentItem(0, true);
-                break;
-            }
+                                           @Override
+                                           public void onPageScrollStateChanged(int state) {
 
-            case -1: {
-                mPager.setCurrentItem(NUM_PAGES, true);
-                getIntent().putExtra("goTo", 0);
-                break;
-            }
+                                           }
+                                       }
 
-            default: {
-                mPager.setCurrentItem(getIntent().getIntExtra("goTo", 0), true);
-                getIntent().putExtra("goTo", 0);
-                break;
-            }
-
-        }
-
-
-        initBottomButtons();
+        );
     }
 
     public void initBottomButtons() {
@@ -325,6 +334,11 @@ public class ScreenSlidePagerActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
+
+
+
+
+
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         public ScreenSlidePagerAdapter(FragmentManager fm) {

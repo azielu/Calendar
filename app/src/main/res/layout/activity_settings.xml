@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context="com.example.calendar.SettingsActivity">
+
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/tool_bar"
+        ></include>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tool_bar"
+        android:gravity="center_horizontal">
+
+
+        <TextView
+        android:id="@+id/delay_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="20dp"
+        android:onClick="setNotification"
+        android:text="Next day change time:"
+        android:textSize="20sp"
+        />
+
+        <TextView
+        android:id="@+id/delay_time_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/delay_text_view"
+        android:textSize="30sp"
+        />
+        <CheckBox
+            android:layout_below="@+id/delay_time_text_view"
+            android:id="@+id/notification_enabled_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:onClick="setNotification"
+            android:text="Enable notifications"
+
+            android:textSize="20sp"
+            />
+
+        <TextView
+            android:id="@+id/time_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/notification_enabled_checkbox"
+            android:textSize="30sp"
+            android:visibility="invisible"/>
+    </RelativeLayout>
+
+</RelativeLayout>

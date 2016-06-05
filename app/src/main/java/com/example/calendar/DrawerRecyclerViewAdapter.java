@@ -53,10 +53,12 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
         bgShape.setColor(fragment.todaysColor);
         bgShape.setStroke(2, Color.BLACK);
         if (position == activity.mPager.getCurrentItem()) {
-            holder.mBackground.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimary));
+            holder.mBackground.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimaryBright));
+            holder.mName.setTextColor(mContext.getResources().getColor(R.color.colorTextPrimary));
         }
         else {
             holder.mBackground.setBackgroundColor(mContext.getResources().getColor(R.color.colorBackground));
+            holder.mName.setTextColor(mContext.getResources().getColor(R.color.colorTextSecondary));
         }
 
 
