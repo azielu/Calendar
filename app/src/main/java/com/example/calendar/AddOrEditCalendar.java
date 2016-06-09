@@ -58,7 +58,7 @@ public class AddOrEditCalendar extends AppCompatActivity {
     private GradientDrawable bgShape;
     private EditText colorDescriptionEdit;
     private TextView addColorButton;
-    int index;
+    private int index;
 
 
     @Override
@@ -79,7 +79,20 @@ public class AddOrEditCalendar extends AppCompatActivity {
                         colorsArray,
                         colorsDescriptionArray);
 
+        initLayoutViews();
+        initAddColorButton();
 
+        index = (getIntent().getIntExtra("edit", -1));
+
+        if (index > -1) {
+            initEditMode();
+
+        } else {
+            initAddNewMode();
+        }
+    }
+
+    private void initLayoutViews(){
         colorsRecyclerView = (RecyclerView) findViewById(R.id.colors_recycler_view);
         name = (EditText) findViewById(R.id.new_calendar_name);
         description = (EditText) findViewById(R.id.new_calendar_description);
@@ -128,22 +141,7 @@ public class AddOrEditCalendar extends AppCompatActivity {
             }
         });
 
-
-
-
-
-        initAddColorButton();
-
-        index = (getIntent().getIntExtra("edit", -1));
-
-        if (index > -1) {
-            initEditMode();
-
-        } else {
-            initAddNewMode();
-        }
     }
-
     private void splitColorsToArray() {
         List<String> colorsArrayString = Arrays.asList(mCalendarColorsString.split("`"));
 

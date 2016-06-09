@@ -32,7 +32,7 @@ public class ScreenSlidePagerActivity extends AppCompatActivity {
      * The number of pages (wizard steps) to show in this demo.
      */
     public static int NUM_PAGES = 0;
-    public float px;
+
     private CalendarLoader calendarLoader;
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
@@ -205,7 +205,8 @@ public class ScreenSlidePagerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (mDrawerLayout.isDrawerOpen(Gravity.LEFT) || mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+        if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)
+                || mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawers();
         } else {
             if (mPager.getCurrentItem() == 0) {
@@ -334,11 +335,6 @@ public class ScreenSlidePagerActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
-
-
-
-
-
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         public ScreenSlidePagerAdapter(FragmentManager fm) {
